@@ -3,41 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>4-Letter Word Game</title>
+    <title>HARDWORD</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', Arial, sans-serif;
             max-width: 500px;
             margin: 0 auto;
             padding: 20px;
             text-align: center;
-            background-color: #f5f5f5;
+            background-color: #000000;
+            color: #ffffff;
             touch-action: manipulation;
         }
-        h1 {
-            color: #333;
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
         }
+        
+        h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 300px;
+            background-color: #121212;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 15px;
+            position: absolute;
+            z-index: 1;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+        }
+        
         .game-container {
-            background-color: white;
+            background-color: #121212;
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #333;
         }
+        
         .guess-board {
             display: grid;
             grid-template-rows: repeat(8, 1fr);
             gap: 10px;
             margin: 20px 0;
         }
+        
         .guess-row {
             display: grid;
             grid-template-columns: repeat(4, 1fr) 1fr 1fr;
             gap: 5px;
         }
+        
         .letter-box {
             width: 50px;
             height: 50px;
-            border: 2px solid #ddd;
+            border: 2px solid #333;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -48,10 +93,14 @@
             perspective: 1000px;
             transform-style: preserve-3d;
             transition: transform 0.6s;
+            background-color: #000000;
+            color: #ffffff;
         }
+        
         .letter-box.flip {
             transform: rotateX(180deg);
         }
+        
         .letter-box-front, .letter-box-back {
             position: absolute;
             width: 100%;
@@ -61,11 +110,14 @@
             align-items: center;
             justify-content: center;
             border-radius: 3px;
+            background-color: #000000;
+            color: #ffffff;
         }
+        
         .letter-box-back {
             transform: rotateX(180deg);
-            color: white;
         }
+        
         .feedback-box {
             width: 25px;
             height: 25px;
@@ -74,33 +126,42 @@
             justify-content: center;
             font-weight: bold;
             margin: auto;
+            border-radius: 50%;
+            border: 2px solid transparent;
         }
+        
         .correct {
             background-color: #6aaa64;
             border-color: #6aaa64;
         }
+        
         .present {
             background-color: #c9b458;
             border-color: #c9b458;
         }
+        
         .absent {
             background-color: #787c7e;
             border-color: #787c7e;
         }
+        
         .keyboard {
             margin-top: 20px;
         }
+        
         .keyboard-row {
             display: flex;
             justify-content: center;
             margin-bottom: 8px;
             gap: 5px;
         }
+        
         .key {
             min-width: 30px;
             height: 50px;
             padding: 0 10px;
-            background-color: #d3d6da;
+            background-color: #333;
+            color: #ffffff;
             border: none;
             border-radius: 4px;
             font-size: 16px;
@@ -111,101 +172,195 @@
             cursor: pointer;
             user-select: none;
         }
+        
         .key.wide {
             min-width: 50px;
             font-size: 12px;
         }
+        
         .key:hover {
-            background-color: #c8cbcf;
+            background-color: #444;
         }
+        
         .key:active {
             transform: scale(0.95);
         }
+        
         .input-area {
             margin-top: 20px;
-            display: none; /* Hide physical input */
+            display: none;
         }
-        .instructions {
-            margin-top: 30px;
-            text-align: left;
-            background-color: #e8e8e8;
-            padding: 15px;
+        
+        .flex-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            column-gap: 5px;
+        }
+        
+        .keyboard-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            row-gap: 5px;
+            background: #222;
+            padding: 5px;
             border-radius: 5px;
+            margin: 0 10px;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
         }
+        
+        /* Circled score numbers */
+        .attempt-score {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-left: 5px;
+            border: 2px solid transparent;
+        }
+        
+        .attempt-score-correct {
+            background-color: #6aaa64;
+            color: white;
+        }
+        
+        .attempt-score-present {
+            background-color: #c9b458;
+            color: white;
+        }
+        
+        .attempt-score-absent {
+            background-color: #787c7e;
+            color: white;
+        }
+        
+        .attempt-score-empty {
+            background-color: transparent;
+            border: 2px solid #333;
+            color: #666;
+        }
+        
         @media (max-width: 500px) {
             .letter-box {
                 width: 40px;
                 height: 40px;
                 font-size: 20px;
             }
+            
             .key {
                 height: 40px;
                 min-width: 25px;
                 font-size: 14px;
             }
+            
             .key.wide {
                 min-width: 40px;
+            }
+            
+            .tooltip .tooltiptext {
+                width: 250px;
+                right: -50px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="header">
+        <h1>HARDWORD</h1>
+        <div class="tooltip">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <div class="tooltiptext">
+                <p><strong>How to Play</strong></p>
+                <p>Find the hidden HARDWORD in eight tries.</p>
+                <p>Use the green and yellow scores after each guess, to see how close are you to the solution.</p>
+                <p><strong>Examples</strong></p>
+                <div class="flex-row" style="justify-content: start; margin: 10px 0;">
+                    <div style="display: flex; gap: 5px;">
+                        <div style="width: 30px; height: 30px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; background: #000; color: #fff;">W</div>
+                        <div style="width: 30px; height: 30px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; background: #000; color: #fff;">O</div>
+                        <div style="width: 30px; height: 30px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; background: #000; color: #fff;">R</div>
+                        <div style="width: 30px; height: 30px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; background: #000; color: #fff;">K</div>
+                    </div>
+                    <div style="display: flex; gap: 5px; margin-left: 10px;">
+                        <div style="width: 25px; height: 25px; background-color: #6aaa64; color: white; display: flex; align-items: center; justify-content: center; border-radius: 50%;">2</div>
+                        <div style="width: 25px; height: 25px; background-color: #c9b458; color: white; display: flex; align-items: center; justify-content: center; border-radius: 50%;">1</div>
+                    </div>
+                </div>
+                <p>2 letters are in the correct spot, 1 more letter is present but in the wrong spot.</p>
+                <div class="flex-row" style="justify-content: start; margin: 10px 0;">
+                    <div style="display: flex; gap: 5px;">
+                        <div style="width: 30px; height: 30px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; background: #000; color: #fff;">B</div>
+                        <div style="width: 30px; height: 30px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; background: #000; color: #fff;">U</div>
+                        <div style="width: 30px; height: 30px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; background: #000; color: #fff;">R</div>
+                        <div style="width: 30px; height: 30px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; background: #000; color: #fff;">P</div>
+                    </div>
+                    <div style="display: flex; gap: 5px; margin-left: 10px;">
+                        <div style="width: 25px; height: 25px; background-color: #787c7e; color: white; display: flex; align-items: center; justify-content: center; border-radius: 50%;">0</div>
+                        <div style="width: 25px; height: 25px; background-color: #787c7e; color: white; display: flex; align-items: center; justify-content: center; border-radius: 50%;">0</div>
+                    </div>
+                </div>
+                <p>None of the letters are present in the word.</p>
+                <p style="margin-top: 15px; font-size: 0.8em; color: #aaa;">hardword.co</p>
+            </div>
+        </div>
+    </div>
+    
     <div class="game-container">
-        <h1>4-Letter Word Game</h1>
-        <p>Guess the hidden word in 8 tries. All letters are unique.</p>
-        
         <div class="guess-board" id="guessBoard">
             <!-- Guess rows will be added by JavaScript -->
         </div>
         
-        <div class="input-area">
-            <input type="text" id="guessInput" maxlength="4" placeholder="Enter 4-letter word">
-            <button onclick="submitGuess()">Submit</button>
-        </div>
-        
-        <div class="keyboard">
+        <div class="keyboard-area">
             <div class="keyboard-row">
-                <div class="key" onclick="pressKey('Q')">Q</div>
-                <div class="key" onclick="pressKey('W')">W</div>
-                <div class="key" onclick="pressKey('E')">E</div>
-                <div class="key" onclick="pressKey('R')">R</div>
-                <div class="key" onclick="pressKey('T')">T</div>
-                <div class="key" onclick="pressKey('Y')">Y</div>
-                <div class="key" onclick="pressKey('U')">U</div>
-                <div class="key" onclick="pressKey('I')">I</div>
-                <div class="key" onclick="pressKey('O')">O</div>
-                <div class="key" onclick="pressKey('P')">P</div>
+                <button class="key" onclick="pressKey('Q')">Q</button>
+                <button class="key" onclick="pressKey('W')">W</button>
+                <button class="key" onclick="pressKey('E')">E</button>
+                <button class="key" onclick="pressKey('R')">R</button>
+                <button class="key" onclick="pressKey('T')">T</button>
+                <button class="key" onclick="pressKey('Y')">Y</button>
+                <button class="key" onclick="pressKey('U')">U</button>
+                <button class="key" onclick="pressKey('I')">I</button>
+                <button class="key" onclick="pressKey('O')">O</button>
+                <button class="key" onclick="pressKey('P')">P</button>
             </div>
             <div class="keyboard-row">
-                <div class="key" onclick="pressKey('A')">A</div>
-                <div class="key" onclick="pressKey('S')">S</div>
-                <div class="key" onclick="pressKey('D')">D</div>
-                <div class="key" onclick="pressKey('F')">F</div>
-                <div class="key" onclick="pressKey('G')">G</div>
-                <div class="key" onclick="pressKey('H')">H</div>
-                <div class="key" onclick="pressKey('J')">J</div>
-                <div class="key" onclick="pressKey('K')">K</div>
-                <div class="key" onclick="pressKey('L')">L</div>
+                <div style="width: 15px;"></div>
+                <button class="key" onclick="pressKey('A')">A</button>
+                <button class="key" onclick="pressKey('S')">S</button>
+                <button class="key" onclick="pressKey('D')">D</button>
+                <button class="key" onclick="pressKey('F')">F</button>
+                <button class="key" onclick="pressKey('G')">G</button>
+                <button class="key" onclick="pressKey('H')">H</button>
+                <button class="key" onclick="pressKey('J')">J</button>
+                <button class="key" onclick="pressKey('K')">K</button>
+                <button class="key" onclick="pressKey('L')">L</button>
+                <div style="width: 15px;"></div>
             </div>
             <div class="keyboard-row">
-                <div class="key wide" onclick="pressKey('Backspace')">⌫</div>
-                <div class="key" onclick="pressKey('Z')">Z</div>
-                <div class="key" onclick="pressKey('X')">X</div>
-                <div class="key" onclick="pressKey('C')">C</div>
-                <div class="key" onclick="pressKey('V')">V</div>
-                <div class="key" onclick="pressKey('B')">B</div>
-                <div class="key" onclick="pressKey('N')">N</div>
-                <div class="key" onclick="pressKey('M')">M</div>
-                <div class="key wide" onclick="submitGuess()">ENTER</div>
+                <button class="key wide" onclick="submitGuess()">ENTER</button>
+                <button class="key" onclick="pressKey('Z')">Z</button>
+                <button class="key" onclick="pressKey('X')">X</button>
+                <button class="key" onclick="pressKey('C')">C</button>
+                <button class="key" onclick="pressKey('V')">V</button>
+                <button class="key" onclick="pressKey('B')">B</button>
+                <button class="key" onclick="pressKey('N')">N</button>
+                <button class="key" onclick="pressKey('M')">M</button>
+                <button class="key wide" onclick="pressKey('Backspace')">⌫</button>
             </div>
-        </div>
-        
-        <div class="instructions">
-            <h3>How to Play</h3>
-            <p><strong>Examples:</strong></p>
-            <p><strong>W O R K 2 1</strong> - 2 letters correct position, 1 letter wrong position</p>
-            <p><strong>H E L P 1 0</strong> - 1 letter correct position, 0 letters wrong position</p>
-            <p><strong>B U R P 0 0</strong> - No matching letters</p>
         </div>
     </div>
 
@@ -293,6 +448,7 @@
                 const row = document.createElement('div');
                 row.className = 'guess-row';
                 
+                // Letter boxes
                 for (let j = 0; j < 4; j++) {
                     const box = document.createElement('div');
                     box.className = 'letter-box';
@@ -304,17 +460,23 @@
                     row.appendChild(box);
                 }
                 
-                // Add feedback boxes
-                const correctBox = document.createElement('div');
-                correctBox.className = 'feedback-box';
-                correctBox.id = `correct-${i}`;
-                row.appendChild(correctBox);
+                // Score circles (empty by default)
+                const scoreContainer = document.createElement('div');
+                scoreContainer.className = 'flex-row';
                 
-                const presentBox = document.createElement('div');
-                presentBox.className = 'feedback-box';
-                presentBox.id = `present-${i}`;
-                row.appendChild(presentBox);
+                const correctScore = document.createElement('div');
+                correctScore.className = 'attempt-score attempt-score-empty';
+                correctScore.textContent = '0';
+                correctScore.id = `correct-${i}`;
+                scoreContainer.appendChild(correctScore);
                 
+                const presentScore = document.createElement('div');
+                presentScore.className = 'attempt-score attempt-score-empty';
+                presentScore.textContent = '0';
+                presentScore.id = `present-${i}`;
+                scoreContainer.appendChild(presentScore);
+                
+                row.appendChild(scoreContainer);
                 board.appendChild(row);
             }
         }
@@ -363,15 +525,6 @@
                 const back = box.querySelector('.letter-box-back');
                 back.textContent = currentGuess[i];
                 
-                // Set color class on the back face
-                if (currentGuess[i] === targetWord[i]) {
-                    back.classList.add('correct');
-                } else if (targetWord.includes(currentGuess[i])) {
-                    back.classList.add('present');
-                } else {
-                    back.classList.add('absent');
-                }
-                
                 // Trigger flip animation with delay
                 setTimeout(() => {
                     box.classList.add('flip');
@@ -380,11 +533,24 @@
             
             // Calculate feedback
             const feedback = evaluateGuess(currentGuess);
-            document.getElementById(`correct-${currentRow}`).textContent = feedback.correct;
-            document.getElementById(`present-${currentRow}`).textContent = feedback.present;
             
-            // Update keyboard colors
-            updateKeyboardColors(currentGuess, feedback);
+            // Update score circles
+            const correctScore = document.getElementById(`correct-${currentRow}`);
+            const presentScore = document.getElementById(`present-${currentRow}`);
+            
+            correctScore.textContent = feedback.correct;
+            presentScore.textContent = feedback.present;
+            
+            // Style score circles based on results
+            if (feedback.correct === 0 && feedback.present === 0) {
+                // All letters wrong - gray circles
+                correctScore.className = 'attempt-score attempt-score-absent';
+                presentScore.className = 'attempt-score attempt-score-absent';
+            } else {
+                // Some letters correct
+                correctScore.className = 'attempt-score attempt-score-correct';
+                presentScore.className = 'attempt-score attempt-score-present';
+            }
             
             // Check for win
             if (feedback.correct === 4) {
@@ -415,22 +581,6 @@
             }
             
             return { correct, present };
-        }
-
-        // Update keyboard colors based on guess
-        function updateKeyboardColors(guess, feedback) {
-            for (let i = 0; i < 4; i++) {
-                const key = document.querySelector(`.key:contains('${guess[i]}')`);
-                if (!key) continue;
-                
-                if (guess[i] === targetWord[i]) {
-                    key.classList.add('correct');
-                } else if (targetWord.includes(guess[i])) {
-                    key.classList.add('present');
-                } else {
-                    key.classList.add('absent');
-                }
-            }
         }
 
         // Initialize the game when the page loads
